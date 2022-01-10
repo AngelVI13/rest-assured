@@ -1,6 +1,7 @@
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import io.restassured.http.ContentType;
@@ -10,11 +11,14 @@ import java.util.Map;
 public class Test_APIs {
 	String credentials = "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks";
 	
+	@BeforeClass
+	public void setup() {
+		// Setting BaseURI once
+		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
+	}
+	
 	@Test
 	public void test_login() {
-		// TODO: maybe define this once on the class ??
-		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
-		
 		given()
 			.contentType(ContentType.URLENC)
 			.body(credentials)
@@ -28,7 +32,6 @@ public class Test_APIs {
 	
 	@Test
 	public void test_CustomerCRM() {
-		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
 		Map<String, String> cookies =  Helpers.login(credentials);
 		String userId = Helpers.getUserId(cookies);
 		
