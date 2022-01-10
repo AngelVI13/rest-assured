@@ -43,7 +43,7 @@ public class Helpers {
 			.body(request.toJSONString())
 		*/
 		Map<String, String> params = new HashMap<String,String>();
-		params.put("body", "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks")
+		params.put("body", "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks");
 		
 		Response response = RestAssured.get("https://dev11.nymbus.com/coreweb/controller/login", params);
 		assert response.statusCode() == 200;
