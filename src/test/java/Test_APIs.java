@@ -39,7 +39,9 @@ public class Test_APIs {
 			.get("/formData/CustomerCRM/")
 		.then()
 			.statusCode(200)
-			.body("success", equalTo(true)) // TODO: Check for more stuff
+			.body("success", equalTo(true))
+			.body("data.field.accountid", hasItems(userId))
+			.body("data.field.accountnumber", hasItems("55889"))
 			.log().all();
 	}
 }
