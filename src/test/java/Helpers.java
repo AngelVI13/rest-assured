@@ -1,12 +1,20 @@
 import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.restassured.RestAssured;
+import io.restassured.RestAssured.*;
+
+import org.json.simple.JSONObject;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import static org.hamcrest.Matchers.*;
 
 public class Helpers {
 
-	public static JSONObject login() {
+	public static Map<String, String> login() {
 		// TODO: maybe define this once on the class ??
 		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
 		
@@ -34,18 +42,13 @@ public class Helpers {
 			
 			.body(request.toJSONString())
 		*/
+		Map<String, String> params = new HashMap<String,String>();
+		params.put("body", "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks")
 		
+		Response response = RestAssured.get("https://dev11.nymbus.com/coreweb/controller/login", params);
+		assert response.statusCode() == 200;
+//		assert response.body("success", equalTo(true));
 		
-		// TODO: Cookies exist even on this request? Should we ignore them or ???
-		given()
-			.contentType(ContentType.JSON)
-			.contentType(ContentType.TEXT)
-			.body("login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks")
-		.when()
-			.post("/login")
-		.then()
-			.statusCode(200)
-			.body("success", equalTo(true))
-			.log().all();
+		return response.getCookies();		
 	}
 }
