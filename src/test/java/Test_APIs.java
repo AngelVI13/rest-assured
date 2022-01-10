@@ -6,7 +6,11 @@ import org.testng.annotations.Test;
 
 import io.restassured.http.ContentType;
 
+import java.io.IOException;
+import java.util.Map;
+
 public class Test_APIs {
+	String credentials = "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks";
 	/* 
 	 * TODO: separate this out to a helper function that can be used as `Test Setup` routine
 	 * It needs to return the cookies needed for requesting data from other endpoints 
@@ -20,45 +24,24 @@ public class Test_APIs {
 		 * Set-Cookie			mscore.cacheid=1639045350603; Path=/
 		 * Set-Cookie			JSESSIONID=0000MQArR-YNwmMQ-NzGQn-uvXY:-1; Path=/; HttpOnly
 		 */
-		
-		/* TODO:
-		 * .body() or .param() for the login credentials ??
-		 * request payload is only listed as: login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks
-		 * If they work as params ?
-		 	.param("login", "evaidakaviciene") // TODO: Obfuscate these parameters ?? or take them from somewhere else
-			.param("password", "tfHL9tEEc5KTmkJJV5ks") 
-		   If it works as body, does it need to be JSON encoded?
-		 */
 
-		/* TODO: Another approach to providing credentials
-			JSONObject request = new JSONObject();
-			request.put("login", "evaidakaviciene");
-			request.put("password", "tfHL9tEEc5KTmkJJV5ks");
-			
-			System.out.println(request);
-			System.out.println(request.toJSONString());
-			
-			.body(request.toJSONString())
-		*/
-		
 		
 		// TODO: Cookies exist even on this request? Should we ignore them or ???
 		given()
-			.contentType(ContentType.JSON)
-			.contentType(ContentType.TEXT)
-			.body("login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks")
+				.contentType(ContentType.URLENC)
+			.body(credentials)
 		.when()
 			.post("/login")
 		.then()
 			.statusCode(200)
 			.body("success", equalTo(true))
-			.log().all();
+			.log().everything();
 	}
 	
 	public void test_getUserId() {
 		/* TODO: Need user ID so we can request stuff
 		 *  https://dev11.nymbus.com/coreweb/controller/context.getContext
-		 *  user	Object { id: 588, name: "Elmyra Vaidakaviciene", code: "evaidakaviciene", … }
+		 *  user	Object { id: 588, name: "Elmyra Vaidakaviciene", code: "evaidakaviciene", ï¿½ }
 		 */
 		
 		/* TODO: Maybe this is better for username
@@ -73,31 +56,20 @@ public class Test_APIs {
 	
 	// TODO: This test should check account numbers only 
 	@Test
-	public void test_CustomerCRM() {
+	public void test_CustomerCRM() throws IOException {
 		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
-		
-		/* TODO: need to add the following cookies which come from the LOGIN request
-		 * Cookie: mscore.cacheid=1639045350603; JSESSIONID=0000MQArR-YNwmMQ-NzGQn-uvXY:-1
-		 *  {
-				"Request Cookies": {
-					"JSESSIONID": "0000MQArR-YNwmMQ-NzGQn-uvXY:-1",
-					"mscore.cacheid": "1639045350603"
-				}
-			}
-		 */
-		
+		Map<String, String> cookies =  Helpers.login(credentials);
 		// TODO: get these from login response
-		String sessionId = "";
-		String cacheId = "";
+		String sessionId = "0000-k8xZ7FoCk2XsrzS3ZRM4WD:-1";
+		String cacheId = "1639045350603";
 		
 		given()
-			.contentType(ContentType.JSON)
-			.contentType(ContentType.TEXT)
-			.cookie("JSESSIONID", sessionId)
-			.cookie("mscore.cacheid", cacheId)
+//			.cookie("JSESSIONID", sessionId)
+//			.cookie("mscore.cacheid", cacheId)
+				.cookies(cookies)
 			.param("id", "208329") // TODO: Where does this ID come from?
 		.when()
-			.post("/formData/CustomerCRM/")
+			.get("/formData/CustomerCRM/")
 		.then()
 			.statusCode(200)
 			.body("success", equalTo(true)) // TODO: Check for more stuff
