@@ -3,6 +3,7 @@ import static io.restassured.RestAssured.baseURI;
 import java.util.Map;
 import static io.restassured.RestAssured.*;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.*;
 
@@ -14,9 +15,10 @@ public class Helpers {
 
 		Response response = 
 				given()
+					.contentType(ContentType.URLENC)
 					.body(credentials)
 				.when()
-					.post("/lotto")
+					.post("/login")
 				.then()
 					.statusCode(200)
 					.body("success", equalTo(true))
