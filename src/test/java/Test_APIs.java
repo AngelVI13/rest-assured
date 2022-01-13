@@ -1,5 +1,8 @@
 import static io.restassured.RestAssured.*;
+import io.restassured.RestAssured;
 import static org.hamcrest.Matchers.*;
+import static io.restassured.config.EncoderConfig.encoderConfig;
+import io.restassured.config.EncoderConfig;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -16,7 +19,8 @@ public class Test_APIs {
 	@BeforeClass
 	public void setup() {
 		// Setting BaseURI once
-		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
+//		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
+		baseURI = "http://localhost:5000/";
 	}
 
 	@Test

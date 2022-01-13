@@ -10,9 +10,6 @@ import static org.hamcrest.Matchers.*;
 public class Helpers {
 
 	public static Map<String, String> login(String credentials) {
-		// TODO: maybe define this once on the class ??
-		baseURI = "https://dev11.nymbus.com/coreweb/controller/";
-
 		Response response = 
 				given()
 					.contentType(ContentType.URLENC)
@@ -53,32 +50,21 @@ public class Helpers {
 	}
 	
 	public static String getFirstAccountId(String userId, Map<String, String> cookies) {
-		String body = "{" +
-				"\"ruleType\":\"BankingCORE\"," +
-				"\"actions\":[" +
-				"\"request\"," +
-				"\"getCustomerAccounts\"" +
-				"]," +
-				"\"beans\":[" +
-				"{" +
-				"\"type\":\"bank.data.actmst\"," +
-				"\"fields\":{" +
-				"\"count\":999," +
-				"\"customerId\":\"" + getCustomerId(userId, cookies) + "\"" +
-				"}" +
-				"}" +
-				"]" +
-				"}";
-		List response = given()
+		String customerId = getCustomerId(userId, cookies);
+		String body = makeCustomerTransactionsRequest(customerId);
+		
+		List response = 
+			given()
 				.cookies(cookies)
 				.contentType(ContentType.JSON)
 				.body(body)
-				.when()
+			.when()
 				.post("widget._GenericProcess")
-				.then()
+			.then()
 				.statusCode(200)
 				.log().all()
-				.extract().path("data.fieldValue.resultList.id");
+			.extract()
+				.path("data.fieldValue.resultList.id");
 
 		return ((ArrayList)response.get(0)).get(0).toString();
 	}
@@ -104,5 +90,24 @@ public class Helpers {
                 "}" +
                 "]" +
                 "}";
+	}
+	
+	public static String makeCustomerTransactionsRequest(String accountId) {
+		return "{" +
+				"\"ruleType\":\"BankingCORE\"," +
+				"\"actions\":[" +
+				"\"request\"," +
+				"\"getCustomerAccounts\"" +
+				"]," +
+				"\"beans\":[" +
+				"{" +
+				"\"type\":\"bank.data.actmst\"," +
+				"\"fields\":{" +
+				"\"count\":999," +
+				"\"customerId\":\"" + accountId + "\"" +
+				"}" +
+				"}" +
+				"]" +
+				"}";
 	}
 }
