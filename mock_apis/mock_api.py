@@ -9,6 +9,9 @@ app.config["DEBUG"] = True
 
 @app.route("/login", methods=["POST"])
 def login():
+    # request_data = json.loads(request.data)
+    print(request.args)
+    print(vars(request))
     data = {"success": True}
 
     return jsonify(data)
