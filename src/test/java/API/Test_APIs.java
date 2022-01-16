@@ -15,7 +15,6 @@ import io.qameta.allure.Owner;
 import java.util.Map;
 
 
-// TODO: Add BDD feature files ????
 // TODO: Add TestRails integration (example from provided code)
 // TODO: Figure out how to provided test parameters externally
 @Epic("APIs")
