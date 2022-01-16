@@ -5,18 +5,21 @@ import static org.hamcrest.Matchers.*;
 import static API.Helpers.*;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import io.restassured.http.ContentType;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 
 // TODO: Add BDD feature files ????
 // TODO: Add TestRails integration (example from provided code)
 // TODO: Figure out how to provided test parameters externally
+@Epic("APIs")
+@Owner("Angel")
 public class Test_APIs {
 	String credentials = "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks";
 
@@ -27,6 +30,7 @@ public class Test_APIs {
 		baseURI = "http://localhost:5000/";
 	}
 	
+	@Feature("Log In")
 	@Test(dataProvider = "existingUserCredentials", dataProviderClass = Helpers.class)
 	public void test_login(String loginCredentials) {		
 		given()
@@ -40,6 +44,7 @@ public class Test_APIs {
 			.log().all();
 	}
 	
+	@Feature("Log In")
 	@Test(dataProvider = "LoginCredentials", dataProviderClass = Helpers.class)
 	public void test_loginMultiple(String loginCredentials, Boolean isSuccessful) {		
 		given()
@@ -53,6 +58,7 @@ public class Test_APIs {
 			.log().all();
 	}
 
+	@Feature("Get User Info")
 	@Test
 	public void test_CustomerCRM() {
 		Map<String, String> cookies =  Helpers.login(credentials);
@@ -71,7 +77,7 @@ public class Test_APIs {
 			.log().all();
 	}
 
-
+	@Feature("Get Account Transactions")
 	@Test
 	public void test_getAccountTransactions() {
 		Map<String, String> cookies = login(credentials);
