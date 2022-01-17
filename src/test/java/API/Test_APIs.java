@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static API.Helpers.*;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import io.restassured.http.ContentType;
@@ -15,10 +16,9 @@ import io.qameta.allure.Owner;
 import java.util.Map;
 
 
-// TODO: Add TestRails integration (example from provided code)
-// TODO: Figure out how to provided test parameters externally
 @Epic("APIs")
 @Owner("Angel")
+@Listeners(TestNgTestRailListener.class)
 public class Test_APIs {
 	String credentials = "login=evaidakaviciene&password=tfHL9tEEc5KTmkJJV5ks";
 
@@ -31,6 +31,7 @@ public class Test_APIs {
 	
 	@Feature("Log In")
 	@Test(dataProvider = "existingUserCredentials", dataProviderClass = Helpers.class)
+	@UseAsTestRailId(testRailId=1)
 	public void test_login(String loginCredentials) {		
 		given()
 			.contentType(ContentType.URLENC)
